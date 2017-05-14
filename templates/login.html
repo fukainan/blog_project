@@ -1,0 +1,31 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <link rel="stylesheet" href={% static "css/login.css" %}>
+</head>
+<body>
+    <div class="content">
+        <h1 class="title">Login</h1>
+        <form action="{% url 'reg' %}" method="post">
+            {% csrf_token %}
+            <ul class="left-form">
+                <h2>Your Account:</h2>
+                <li>
+                    {{ login_form.username }}
+                    <div class="clear"></div>
+                </li>
+                <li>
+                    {{ login_form.password }}
+                    <div class="clear"></div>
+                </li>
+                <input type="hidden" name="source_url" value="{{ request.META.HTTP_REFERER }}">
+                <input type="submit" class="button" value="Create And Login">
+                <div class="clear"></div>
+            </ul>
+        </form>
+    </div>
+</body>
+</html>

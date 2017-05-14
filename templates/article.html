@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load myfilter %}
+{% block left_content %}
+    <div class="postdate">
+        <div class="month">{{ article.date_publish | month_to_upper }}</div>
+        <div class="date">{{ article.date_publish | date:'d' }}</div>
+    </div>
+    <div class="title">
+        <h2><a href="" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h2>
+        <div class="postmeta">
+            <span class="postmeta_author">{{ article.user.username }}</span>
+            <span class="postmeta_category"><a href="" rel="category">{{ article.category.name }}</a></span>
+            <span class="postmeta_time">{{ article.date_publish | date:'Y-m-d' }}</span>
+        </div>
+    </div>
+    <div class="entry">
+        <p>{{ article.content | safe }}</p>
+    </div>
+    <span class="tags">
+        {% for tag in article.tag.all %}
+            <a href="?tag={{ tag.name }}" rel="tag">{{ tag.name }}</a>
+        {% endfor %}
+    </span>
+    <div class="info">
+        <span>Adress: </span><a href="{{ SITE_URL }}article/?id={{ article.id }}" rel="bookmark" title="{{ article.title }}">{{ SITE_URL }}article/?id={{ article.id }}</a>
+    </div>
+    <ol class="commentlist">
+        {% for comment in comment_list %}
+            <li id="comment-59418">
+                <div class="top"><a href="{{ comment.url }}" rel="external nofollow">{{ comment.user.username }}</a><span>{{ comment.date_publish | date:'Y-m-d' }}</span></div>
+                <div><img src="{% static 'images/ico_07_1.jpg' %}" alt="" class="avatar"></div>
+                <div class="body">
+                    <p>{{ comment.content }}</p>
+                </div>
+            </li>
+            {% for children_comment in comment.children_comment %}
+                <li id="comment-59542">
+                    <div class="reply">
+                        <div class="top"><a href="{{ children_comment.url }}" rel="external nofollow">{{ comment.user.username }}</a><span>{{ comment.date_publish | date:'Y-m-d' }}</span></div>
+                        <div><img src="{% static 'images/ico_07_1.jpg' %}" alt="" class="avatar"></div>
+                        <div class="body">
+                            <p>{{ children_comment.content }}</p>
+                        </div>body
+                    </div>
+                </li>
+            {% endfor %}
+        {% endfor %}
+    </ol>
+    <div id="commentform">
+        <h3 id="respond">Add your comment now</h3>
+        {% if not request.user.is_authenticated %}
+            <div class="login_info">还没有登录？可以登陆后再评论。<b><a href="{% url 'login' %}">&raquo;登陆</a>&nbsp;<a href="{% url 'reg' %}">&raquo;注册</a></b></div>
+        {% else %}
+            <div class="login_info"><b>{{ request.user.username }}</b>，快来写点评论吧！&nbsp;<a href="{% url 'logout' %}">注销</a></div>
+        {% endif %}
+        <form action="{% url 'comment_post' %}" method="post">
+            {% csrf_token %}
+            <p>{{ comment_form.author }}
+            <lable for="author">Name (required)</lable></p>
+            <p>{{ comment_form.email }}
+            <lable for="email">Email (Will NOT be published)(required)</lable></p>
+            <p>{{ comment_form.url }}
+            <lable for="url">URL</lable></p>
+            <p>{{ comment_form.comment }}
+            <lable for="author">Comment</lable></p>
+            <p>{{ comment_form.article }}</p>
+            <p><input type="submit" class="button" name="submit" id="submit" value="Submit" tabindex="5"></p>
+        </form>
+    </div>
+{% endblock %}

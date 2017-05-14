@@ -1,0 +1,39 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <link rel="stylesheet" href={% static "css/reg.css" %}>
+</head>
+<body>
+    <div class="content">
+        <h1 class="title">Create a Free Account</h1>
+        <form action="{% url 'reg' %}" method="post">
+            {% csrf_token %}
+            <ul class="left-form">
+                <h2>New Account:</h2>
+                <li>
+                    {{ reg_form.username }}
+                    <div class="clear"></div>
+                </li>
+                <li>
+                    {{ reg_form.email }}
+                    <div class="clear"></div>
+                </li>
+                <li>
+                    {{ reg_form.url }}
+                    <div class="clear"></div>
+                </li>
+                <li>
+                    {{ reg_form.password }}
+                    <div class="clear"></div>
+                </li>
+                <input type="hidden" name="source_url" value="{{ request.META.HTTP_REFERER }}">
+                <input type="submit" class="button" value="Create And Login">
+                <div class="clear"></div>
+            </ul>
+        </form>
+    </div>
+</body>
+</html>
